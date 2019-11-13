@@ -3,7 +3,7 @@ var router = express.Router();
 var connection = require("../lib/db");
 
 router.get('/add', function (req, res, next) {
-  res.render('addRestaurant', { title: 'Add New Restaurant' });
+  res.render('addRestaurant', { title: 'Add New Restaurant', action: 'add', name: '', address: '' });
 });
 
 router.post('/add', function (req, res, next) {
@@ -75,6 +75,44 @@ router.get('/:id/delete', function (req, res, next) {
     } else {
       res.redirect('/');
     }
+  });
+});
+
+router.get('/:id/edit', function (req, res, next) {
+  connection.query("SELECT * FROM restaurants WHERE id = " + req.params.id, function (
+    err,
+    restaurant,
+    fields
+  ) {
+    if (err) {
+      next(err);
+    }
+    if (restaurant.length <= 0) {
+      res.redirect("/");
+    } else {
+      console.log("restaurant", restaurant);
+      res.render("addRestaurant", {
+        title: "Edit Restaurant",
+        action: restaurant[0].ID + "/edit",
+        id: restaurant[0].ID,
+        name: restaurant[0].NAME,
+        address: restaurant[0].ADDRESS
+      });
+    }
+  });
+});
+
+router.post('/:id/edit', function (req, res, next) {
+  var data = {
+    name: req.body.name,
+    address: req.body.address
+  };
+
+  connection.query("UPDATE restaurants SET ? WHERE id = " + req.params.id, data, function (err, result) {
+    if (err) {
+      next(err);
+    }
+    res.redirect('/restaurant/'+req.params.id);
   });
 });
 
