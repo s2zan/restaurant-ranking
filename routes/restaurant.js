@@ -38,14 +38,14 @@ router.get('/:id', function (req, res, next) {
       res.redirect("/");
     } else {
       connection.query("SELECT tags.title "
-                      +"FROM tags "
-                      +"INNER JOIN mapping_tag_restaurant AS m "
-                      +"ON tags.id = m.tag_id "
-                      +"WHERE m.restaurant_id = " + req.params.id, function (
-        err,
-        tags,
-        fields
-      ) {
+        + "FROM tags "
+        + "INNER JOIN mapping_tag_restaurant AS m "
+        + "ON tags.id = m.tag_id "
+        + "WHERE m.restaurant_id = " + req.params.id, function (
+          err,
+          tags,
+          fields
+        ) {
         if (err) {
           next(err);
         }
@@ -64,4 +64,18 @@ router.get('/:id', function (req, res, next) {
     }
   });
 });
+
+router.get('/:id/delete', function (req, res, next) {
+  connection.query("DELETE FROM restaurants WHERE id = " + req.params.id, function (
+    err,
+    restaurant
+  ) {
+    if (err) {
+      next(err);
+    } else {
+      res.redirect('/');
+    }
+  });
+});
+
 module.exports = router;
