@@ -2,12 +2,12 @@ extends layout
 
 block content
   h1 #{title}
-  form(method='POST' action='/restaurant/add')
+  form(method='POST' action='/restaurant/#{action}')
         div.form-group
             label(for='name') name
-            input.form-control(type='text' id='name' placeholder='name' name='name')
+            input.form-control(type='text' id='name' placeholder='name' name='name' value='#{name}')
         div.form-group
             label(for='address') address
-            input.form-control(type='test' id='address' placeholder='address' name='address')
-        button.btn.btn-primary(type='submit') ADD
+            input.form-control(type='test' id='address' placeholder='address' name='address' value='#{address}')
+        button.btn.btn-primary(type='submit') submit
   
