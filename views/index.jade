@@ -6,7 +6,8 @@ block content
   a(href="/restaurant/add") + Add New Restaurant
   ul
     for restaurant in restaurants
-      li #{restaurant.NAME}
+      li 
+        a(href="/restaurant/#{restaurant.ID}") #{restaurant.NAME}
     else
       li sorry, no restaurant!
 
