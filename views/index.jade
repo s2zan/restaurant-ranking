@@ -3,3 +3,10 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+  a(href="/restaurant/add") + Add New Restaurant
+  ul
+    for restaurant in restaurants
+      li #{restaurant.NAME}
+    else
+      li sorry, no restaurant!
+

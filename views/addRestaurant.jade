@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 #{title}
+  form(method='POST' action='/restaurant/add')
+        div.form-group
+            label(for='name') name
+            input.form-control(type='text' id='name' placeholder='name' name='name')
+        div.form-group
+            label(for='address') address
+            input.form-control(type='test' id='address' placeholder='address' name='address')
+        button.btn.btn-primary(type='submit') ADD
+  
