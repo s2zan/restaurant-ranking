@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 #{title}
+  form(method='GET' action='/index')
+    div.form-group
+        label(for='ID') ID
+        input.form-control(type='text' id='ID' placeholder='ID' name='ID' value='#{ID}')
+    div.form-group
+        label(for='PW') PW
+        input.form-control(type='hidden' id='PW' placeholder='PASSWORD' name='PW' value='#{PW}')
+    button.btn.btn-primary(type='login') login
+    button.btn.btn-primary(type='join') join

@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1 #{title}
+  form(method='POST' action='/index')
+    div.form-group
+        label(for='id') id
+        input.form-control(type='text' id='id' placeholder='id' name='id' value='#{id}')
+    div.form-group
+        label(for='pw') pw
+        input.form-control(type='hidden' id='pw' placeholder='PASSWORD' name='pw' value='#{pw}')
+    div.form-group
+        label(for='NAME') name
+        input.form-control(type='text' id='name' placeholder='NAME' name='name' value='#{name}')
+    button.btn.btn-primary(type='submit') submit
