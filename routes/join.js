@@ -2,15 +2,15 @@ var express = require('express');
 var router = express.Router();
 var connection = require("../lib/db");
 
-router.get('/join', function (req, res, next){
-    res.render('join', { title: 'Ewha-eats'})
+router.get('/', function (req, res, next){
+    res.render('join', { title: 'Join', id : '', pw : '', name : ''});
 });
 
-router.post('/login/join', function(req, res, next){
+router.post('/', function(req, res, next){
     try{
         var data = {
             id: req.body.id,
-            pw: req.body.pw,
+            pwd: req.body.pw,
             name: req.body.name
         };
 
@@ -18,6 +18,7 @@ router.post('/login/join', function(req, res, next){
             if(err){
                 next(err);
             }
+            console.log("result", result);
             res.redirect('/');
         });
     } catch(err){

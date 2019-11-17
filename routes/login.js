@@ -2,12 +2,12 @@ var express = require('express');
 var router = express.Router();
 var connection = require("../lib/db");
 
-router.get('/login', function (req, res, next){
-    res.render('login', { title: 'Ewha-eats'})
+router.get('/', function (req, res, next){
+    res.render('login', { title: 'Ewha-eats', id: '', pw: '' });
 });
 
-router.get("/login", function(req, res, next){
-    console.log("login page")
+router.get("/", function(req, res, next){
+    console.log("login page");
     connection.query("SELECT pwd FROM users WHERE id = " + req.params.id, function(
         err,
         user,
@@ -16,9 +16,11 @@ router.get("/login", function(req, res, next){
         if(err){
             next(err);
         } if( pwd == req.params.pw ){
-            res.redirect('/');
-        } else {
+            console.log(id, pwd);
             res.redirect('/index');
+        } else {
+            console.log('else');
+            res.redirect('/login');
         }
     });
 

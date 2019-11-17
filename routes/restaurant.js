@@ -18,7 +18,7 @@ router.post('/add', function (req, res, next) {
         next(err);
       }
       console.log("result", result);
-      res.redirect('/');
+      res.redirect('/index');
     });
   } catch (err) {
     throw new Error(err);

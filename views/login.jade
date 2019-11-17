@@ -2,12 +2,12 @@ extends layout
 
 block content
   h1 #{title}
-  form(method='GET' action='/index')
+  form(method='GET' action='/login')
     div.form-group
         label(for='ID') ID
-        input.form-control(type='text' id='ID' placeholder='ID' name='ID' value='#{ID}')
+        input.form-control(type='text' id='ID' placeholder='ID' name='ID' value='#{id}')
     div.form-group
         label(for='PW') PW
-        input.form-control(type='hidden' id='PW' placeholder='PASSWORD' name='PW' value='#{PW}')
-    button.btn.btn-primary(type='login') login
-    button.btn.btn-primary(type='join') join
+        input.form-control(type='text' id='PW' placeholder='PASSWORD' name='PW' value='#{pw}')
+    a(href="/index"): button(type="button") login
+    a(href="/join"): button(type="button") join
