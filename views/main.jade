@@ -9,5 +9,7 @@ block content
     div.form-group
         label(for='PW') PW
         input.form-control(type='text' id='PW' placeholder='PASSWORD' name='PW' value='#{pw}')
-    a(href="/index"): button(type="button") login
+    button.btn.btn-primary(type='submit') login
+    //- button.btn.btn-primary(type='button') join
+    //- a(href="/index"): button(type="button") login
     a(href="/join"): button(type="button") join

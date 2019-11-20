@@ -13,12 +13,12 @@ router.post('/', function(req, res, next){
             pwd: req.body.pw,
             name: req.body.name
         };
-
+        console.log("post in");
         connection.query("INSERT INTO users SET ?", data, function(err, result){
             if(err){
                 next(err);
             }
-            console.log("result", result);
+            //console.log("result", result);
             res.redirect('/');
         });
     } catch(err){
