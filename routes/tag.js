@@ -36,4 +36,41 @@ router.get('/:id', async (req, res, next) => {
     next(err)
   }
 });
+
+router.get('/:id/delete', async (req, res, next) => {
+    try{
+      const [rows] = await connection.query('DELETE FROM tags WHERE id = ?', [req.params.id]);
+      res.redirect('/');
+    }
+    catch(err){
+      next(err)
+    }
+  });
+  
+router.get('/:id/edit', async (req, res, next) => {
+    try{
+      const [tag] = await connection.execute('SELECT * FROM tags WHERE id = ?', [req.params.id]);
+      res.render("addTag", {
+            title: "Edit Tag",
+            action: tag[0].ID + "/edit",
+            name: tag[0].NAME,
+            desc: tag[0].DESC
+        });
+    }
+    catch(err){
+      next(err)
+    }
+  });
+
+router.post('/:id/edit', async (req, res, next) => {
+    try{
+      const [rows] = await connection.query('UPDATE tags SET name = ?, `desc` = ? WHERE id = ?', 
+                        [req.body.name, req.body.desc, req.params.id]);
+      res.redirect('/tag/'+req.params.id);
+    }
+    catch(err){
+      next(err)
+    }
+  });
+
 module.exports = router;
