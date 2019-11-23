@@ -9,5 +9,8 @@ block content
   a(href="/tag/#{id}/delete") delete
   h1= name
   p #{desc}
-  p #{restaurants}
+  ol
+    for restaurant in restaurants
+      li 
+        a(href="/restaurant/#{restaurant.ID}") #{restaurant.NAME}
 

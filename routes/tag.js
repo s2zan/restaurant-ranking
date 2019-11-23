@@ -21,9 +21,10 @@ router.post('/add', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try{
     const [tag] = await connection.execute('SELECT * FROM tags WHERE id = ?', [req.params.id]);
-    const [restaurants] = await connection.query("SELECT r.* FROM restaurants AS r INNER JOIN mapping_tag_restaurant AS m "
-                                          + "ON r.id = m.tag_id "
+    const [restaurants] = await connection.query("SELECT * FROM restaurants AS r INNER JOIN mapping_tag_restaurant AS m "
+                                          + "ON r.id = m.restaurant_id "
                                           + "WHERE m.tag_id = ?", [req.params.id])
+    console.log(restaurants)
     res.render("tagDetail", {
       title: "Tag Detail",
       id: tag[0].ID,

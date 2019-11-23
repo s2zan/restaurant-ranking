@@ -20,7 +20,7 @@ router.post('/add', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try{
     const [restaurant] = await connection.execute('SELECT * FROM restaurants WHERE id = ?', [req.params.id]);
-    const [tags] = await connection.query("SELECT tags.name FROM tags INNER JOIN mapping_tag_restaurant AS m "
+    const [tags] = await connection.query("SELECT tags.id, tags.name FROM tags INNER JOIN mapping_tag_restaurant AS m "
                                           + "ON tags.id = m.tag_id "
                                           + "WHERE m.restaurant_id = ?", [req.params.id])
     res.render("restaurantDetail", {
@@ -49,12 +49,16 @@ router.get('/:id/delete', async (req, res, next) => {
 router.get('/:id/edit', async (req, res, next) => {
   try{
     const [restaurant] = await connection.execute('SELECT * FROM restaurants WHERE id = ?', [req.params.id]);
+    const [tags] = await connection.query("SELECT tags.id, tags.name, m.restaurant_id FROM tags LEFT OUTER JOIN mapping_tag_restaurant AS m "
+                                          + "ON tags.id = m.tag_id "
+                                          + "AND m.restaurant_id = ?", [req.params.id])
     res.render("addRestaurant", {
           title: "Edit Restaurant",
           action: restaurant[0].ID + "/edit",
           id: restaurant[0].ID,
           name: restaurant[0].NAME,
-          address: restaurant[0].ADDRESS
+          address: restaurant[0].ADDRESS, 
+          tags: tags
       });
   }
   catch(err){
@@ -65,8 +69,16 @@ router.get('/:id/edit', async (req, res, next) => {
 
 router.post('/:id/edit', async (req, res, next) => {
   try{
-    const [rows] = await connection.query('UPDATE restaurants SET name = ?, address = ? WHERE id = ?', 
+    await connection.query('UPDATE restaurants SET name = ?, address = ? WHERE id = ?', 
                       [req.body.name, req.body.address, req.params.id]);
+    await connection.query('DELETE FROM mapping_tag_restaurant WHERE restaurant_id = ?', [req.params.id]);
+    let tags = null
+    if(Array.isArray(req.body.tags))
+      tags = req.body.tags.map(x=>[req.params.id, x])
+    else
+      tags = [[req.params.id, req.body.tags]]
+    console.log(tags)
+    await connection.query('INSERT INTO mapping_tag_restaurant (restaurant_id, tag_id) VALUES ?', [tags]);
     res.redirect('/restaurant/'+req.params.id);
   }
   catch(err){
