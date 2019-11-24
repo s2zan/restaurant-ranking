@@ -17,5 +17,12 @@ block content
     for restaurant in restaurants
       li.list-group-item
         a(href="/restaurant/#{restaurant.ID}") #{restaurant.NAME}
+        span(style="float: right;")
+              if restaurant.score != null
+                - for (var i = 1; i <= restaurant.score; ++i) {
+                  span ⭐️
+                - }
+                &emsp;
+                span #{Math.round(restaurant.score * 100)/100}
       
 

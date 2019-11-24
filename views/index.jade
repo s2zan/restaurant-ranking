@@ -4,15 +4,22 @@ block content
   h1= title
   p Welcome to #{title}
   div.row
-    div.col-sm
+    div.col-sm-8
       a(href="/restaurant/add"): button.btn.btn-success(type="button") + Add New Restaurant
       ol.list-group
         for restaurant in restaurants
           li.list-group-item
             a(href="/restaurant/#{restaurant.ID}") #{restaurant.NAME}
+            span(style="float: right;")
+              if restaurant.score != null
+                - for (var i = 1; i <= restaurant.score; ++i) {
+                  span ⭐️
+                - }
+                &emsp;
+                span #{Math.round(restaurant.score * 100)/100}
         else
           li sorry, no restaurant!
-    div.col-sm
+    div.col-sm-4
       a(href="/tag/add"): button.btn.btn-success(type="button") + Add New Tag
       ul.list-group
         for tag in tags
