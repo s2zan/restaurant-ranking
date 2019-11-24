@@ -3,6 +3,10 @@ var router = express.Router();
 var connection = require("../lib/db");
 
 router.get('/add', async (req, res, next) => {
+  if(req.session.user == null){
+    req.session.url = '/restaurant/add'
+    res.redirect('/login');
+  }
   try{
     const [tags] = await connection.execute('SELECT id, name FROM tags');
     res.render('addRestaurant', { title: 'Add New Restaurant', action: 'add', name: '', address: '', tags: tags});
@@ -14,6 +18,10 @@ router.get('/add', async (req, res, next) => {
 
 
 router.post('/add', async (req, res, next) => {
+  if(req.session.user == null){
+    req.session.url = '/restaurant/add'
+    res.redirect('/login');
+  }
   try{
     if (req.body.name == null || req.body.name.length == 0) {
       const [tags] = await connection.execute('SELECT id, name FROM tags');
@@ -41,17 +49,26 @@ router.post('/add', async (req, res, next) => {
 });
 
 router.get('/:id', async (req, res, next) => {
+  if(req.session.user == null){
+    req.session.url = '/restaurant/'+req.params.id
+    res.redirect('/login');
+  }
   try{
     const [restaurant] = await connection.execute('SELECT * FROM restaurants WHERE id = ?', [req.params.id]);
     const [tags] = await connection.query("SELECT tags.id, tags.name FROM tags INNER JOIN mapping_tag_restaurant AS m "
                                           + "ON tags.id = m.tag_id "
                                           + "WHERE m.restaurant_id = ?", [req.params.id])
+    const [score] = await connection.query("SELECT avg(score) FROM reviews WHERE restaurant_id = ?", [req.params.id])
+    const [reviews] = await connection.query("SELECT reviews.id, user_id, `name`, `comment`, score, created_at FROM reviews join users on user_id = users.id WHERE restaurant_id = ? ORDER BY created_at DESC", [req.params.id])
     res.render("restaurantDetail", {
       title: "Restaurant Detail",
       id: restaurant[0].ID,
       name: restaurant[0].NAME,
       address: restaurant[0].ADDRESS,
-      tags: tags
+      tags: tags,
+      score: score[0]['avg(score)'],
+      reviews: reviews,
+      user: req.session.user
     });
   }
   catch(err){
@@ -60,6 +77,10 @@ router.get('/:id', async (req, res, next) => {
 });
 
 router.get('/:id/delete', async (req, res, next) => {
+  if(req.session.user == null){
+    req.session.url = '/restaurant/'+req.params.id
+    res.redirect('/login');
+  }
   try{
     const [rows] = await connection.query('DELETE FROM restaurants WHERE id = ?', [req.params.id]);
     res.redirect('/');
@@ -70,6 +91,10 @@ router.get('/:id/delete', async (req, res, next) => {
 });
 
 router.get('/:id/edit', async (req, res, next) => {
+  if(req.session.user == null){
+    req.session.url = '/restaurant/'+req.params.id
+    res.redirect('/login');
+  }
   try{
     const [restaurant] = await connection.execute('SELECT * FROM restaurants WHERE id = ?', [req.params.id]);
     const [tags] = await connection.query("SELECT tags.id, tags.name, m.restaurant_id FROM tags LEFT OUTER JOIN mapping_tag_restaurant AS m "
@@ -91,6 +116,10 @@ router.get('/:id/edit', async (req, res, next) => {
 
 
 router.post('/:id/edit', async (req, res, next) => {
+  if(req.session.user == null){
+    req.session.url = '/restaurant/'+id
+    res.redirect('/login');
+  }
   try{
     if (req.body.name == null || req.body.name.length == 0) {
       const [tags] = await connection.query("SELECT tags.id, tags.name, m.restaurant_id FROM tags LEFT OUTER JOIN mapping_tag_restaurant AS m "

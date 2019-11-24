@@ -10,14 +10,50 @@ block content
   h1= name
   p @ #{address}
   for tag in tags
-    a(href="/tag/#{tag.id}" style="background-color: lightgreen;") # #{tag.name}
-    &emsp;
-
-  h4 REVIEW
-  form(method='POST' action='/review')
-    label(for='review') review
-    textarea.form-control(id='name' placeholder='Please review this restaurant...' name='review' value='#{review}')
+    a(href="/tag/#{tag.id}")
+      span.badge.badge-success # #{tag.name}
+    &emsp; 
   
+  if score != null
+    br
+    - for (var i = 0; i < score; ++i) {
+      span ⭐️
+    - }
+    &emsp;
+    span #{Math.round(score * 100)/100}
+  else
+    p(style="color: lightgray;") There are no reviews yet.
+    
+  h4 REVIEWS
+  form(method='POST' action='/review/#{id}')
+    textarea.form-control(id='comment' placeholder='Please review this restaurant...' name='comment' value='#{comment}')
+    br
+    span score: 
+    input(type="radio", id="1", value=1, name="score")
+    | 1
+    input(type="radio", id="2", value=2, name="score")
+    | 2
+    input(type="radio", id="3", value=3, name="score")
+    | 3
+    input(type="radio", id="4", value=4, name="score")
+    | 4
+    input(type="radio", id="5", value=5, name="score")
+    | 5
+    button.btn.btn-primary(type='submit') submit
+
+  table.table
+    for review in reviews
+      tr 
+        th(scope="row") #{review.name}
+        td #{review.comment}
+        td
+          - for (var i = 0; i < review.score; ++i) {
+            span ⭐️
+          - }
+        td #{review.created_at.getFullYear()}. #{review.created_at.getMonth()+1}. #{review.created_at.getDate()}
+        if user == review.user_id
+          td
+            a(href="/review/#{id}/#{review.id}/delete"): button.btn.btn-outline-danger(type="button") DEL
   //- p Menu
   //- ul
   //-   for menu in menus
@@ -27,11 +63,3 @@ block content
   //-   else
   //-     li sorry, no menu!
 
-  //- p Reviews
-  //- ul
-  //-   for review in reviews
-  //-     li
-  //-       p #{review.USER_ID}
-  //-       p #{review.COMMENT}
-  //-   else
-  //-     li sorry, no review!
