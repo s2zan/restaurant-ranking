@@ -3,25 +3,36 @@ var router = express.Router();
 var connection = require("../lib/db");
 
 
-router.get("/", function(req, res, next){
-    console.log("login page");
-    connection.query("SELECT pwd FROM users WHERE id = " + req.params.id, function(
-        err,
-        pwd,
-        fields
-    ){
-        if(err){
-            next(err);
-        } if( pwd == req.params.pw && pwd != null ){
-            console.log('pwd compared');
-            console.log(req.params.id, pwd);
-            res.redirect('/index');
-        } else {
-            console.log('else');
-            res.redirect('/main');
-        }
-    });
-
+router.get('/', function (req, res, next) {
+    console.log(req.session)
+    res.render('login', { title: 'EWHA-eats', id: '', pw: '' });
 });
 
+router.post("/", async (req, res, next) => {
+    console.log(req.session)
+    try{
+        if (req.body.id == null || req.body.id.length == 0 || req.body.pw == null || req.body.pw.length == 0){
+            res.render('login', { title: 'EWHA-eats', id: '', pw: '', error: 'Please enter ID and Password' });
+        }
+        else {
+            const [pwd] = await connection.query('SELECT pwd FROM users WHERE id = ?', [req.body.id]); 
+            if(pwd.length == 0) {
+                res.render('login', { title: 'EWHA-eats', id: req.body.id, pw: '', error: 'Check your ID or Password' });
+            }
+            else {
+                if(pwd[0].pwd != req.body.pw) {
+                    res.render('login', { title: 'EWHA-eats', id: req.body.id, pw: '', error: 'Check your ID or Password' });
+                }
+                else {
+                    req.session.user = req.body.id;
+                    console.log(req.session)
+                    res.redirect('/');
+                }
+            }
+        }
+    }
+    catch (err) {
+        next(err)
+    }
+});
 module.exports = router;
