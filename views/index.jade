@@ -4,9 +4,18 @@ block content
   h1= title
   p Welcome to #{title}
   a(href="/restaurant/add") + Add New Restaurant
-  ul
+  ol
     for restaurant in restaurants
-      li #{restaurant.NAME}
+      li 
+        a(href="/restaurant/#{restaurant.ID}") #{restaurant.NAME}
     else
       li sorry, no restaurant!
+  
+  a(href="/tag/add") + Add New Tag
+  ul
+    for tag in tags
+      li 
+        a(href="/tag/#{tag.ID}") #{tag.NAME}
+    else
+      li sorry, no tag!
 

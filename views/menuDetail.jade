@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h3= title
+  a(href="/") home
+  br
+  a(href="/restaurant/#{id}/menu/#{menuID}/delete") delete
+
+  h1 #{title}
+  form(method='POST' action='/restaurant/#{id}/menu/#{menuID}/edit')
+        div.form-group
+            label(for='name') name
+            input.form-control(type='text' id='name' placeholder='name' name='name' value='#{name}')
+        div.form-group
+            label(for='price') price
+            input.form-control(type='text' id='price' placeholder='price' name='price' value='#{price}')
+        button.btn.btn-primary(type='submit') submit
