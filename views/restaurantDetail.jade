@@ -2,7 +2,7 @@ extends layout
 
 block content
   h3= title
-  a(href="/") home
+  a(href="/index") home
   br
   a(href="/restaurant/#{id}/edit") edit
   br
@@ -13,3 +13,20 @@ block content
     a(href="/tag/#{tag.id}" style="background-color: lightgreen;") # #{tag.name}
     &emsp;
 
+  //- p Menu
+  //- ul
+  //-   for menu in menus
+  //-     li
+  //-       p #{menu.NAME}
+  //-       p #{menu.PRICE}
+  //-   else
+  //-     li sorry, no menu!
+
+  //- p Reviews
+  //- ul
+  //-   for review in reviews
+  //-     li
+  //-       p #{review.USER_ID}
+  //-       p #{review.COMMENT}
+  //-   else
+  //-     li sorry, no review!

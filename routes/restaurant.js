@@ -6,6 +6,7 @@ router.get('/add', function (req, res, next) {
   res.render('addRestaurant', { title: 'Add New Restaurant', action: 'add', name: '', address: '' });
 });
 
+
 router.post('/add', async (req, res, next) => {
   try{
     const [rows] = await connection.query('INSERT INTO restaurants (name, address) VALUES (?,?)', 
