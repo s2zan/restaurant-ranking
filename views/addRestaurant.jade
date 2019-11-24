@@ -2,6 +2,7 @@ extends layout
 
 block content
   h1 #{title}
+  p(style="color: red;") #{error}
   form(method='POST' action='/restaurant/#{action}')
         div.form-group
             label(for='name') name
