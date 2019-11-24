@@ -25,8 +25,8 @@ router.post("/", async (req, res, next) => {
                 }
                 else {
                     req.session.user = req.body.id;
-                    console.log(req.session)
-                    res.redirect('/');
+                    if(req.session.url == null) res.redirect('/');
+                    else res.redirect(req.session.url);
                 }
             }
         }
