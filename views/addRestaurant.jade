@@ -9,5 +9,13 @@ block content
         div.form-group
             label(for='address') address
             input.form-control(type='test' id='address' placeholder='address' name='address' value='#{address}')
+
+        h3 tags
+        for tag in tags
+            input(type="checkbox", id=tag.id, value=tag.id, name="tags", checked=(tag.restaurant_id != null ? "checked" : undefined))
+            label(for=name.id) #{tag.name}
+            br
+        br
+        br
         button.btn.btn-primary(type='submit') submit
-  
+

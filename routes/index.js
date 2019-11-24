@@ -1,22 +1,19 @@
-var express = require('express');
-var router = express.Router();
-var connection = require("../lib/db");
+const express = require('express');
+const router = express.Router();
+const connection = require("../lib/db");
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  connection.query("SELECT * FROM restaurants", function(err, rows) {
-    if (err) {
-      next(err);
-    } else {
-      // console.log("rows", rows);
-      res.render('index', {
-        title: 'Ewha-eats',
-        messages: {
-          success: true
-        },
-        restaurants: rows
-      });
-    }
+router.get('/', async (req, res, next) => {
+  const [restaurants] = await connection.execute('SELECT * FROM restaurants');
+  const [tags] = await connection.execute('SELECT * FROM tags');
+
+  res.render('index', {
+    title: 'Ewha-eats',
+    messages: {
+      success: true
+    },
+    restaurants: restaurants,
+    tags: tags
   });
 });
 
