@@ -32,7 +32,7 @@ router.post('/add', async (req, res, next) => {
 
         await connection.query('INSERT INTO mapping_tag_restaurant (restaurant_id, tag_id) VALUES ?', [tags]);
       }
-      res.redirect('/');
+      res.redirect('/index');
     }
   }
   catch(err){
@@ -43,6 +43,7 @@ router.post('/add', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try{
     const [restaurant] = await connection.execute('SELECT * FROM restaurants WHERE id = ?', [req.params.id]);
+    const [menus] = await connection.query("SELECT name, price FROM menus WHERE menus.restaurant_id = ?", [req.params.id]);
     const [tags] = await connection.query("SELECT tags.id, tags.name FROM tags INNER JOIN mapping_tag_restaurant AS m "
                                           + "ON tags.id = m.tag_id "
                                           + "WHERE m.restaurant_id = ?", [req.params.id])
@@ -51,8 +52,10 @@ router.get('/:id', async (req, res, next) => {
       id: restaurant[0].ID,
       name: restaurant[0].NAME,
       address: restaurant[0].ADDRESS,
-      tags: tags
+      tags: tags,
+      menus: menus,
     });
+    console.log(menus);
   }
   catch(err){
     next(err)
@@ -114,6 +117,65 @@ router.post('/:id/edit', async (req, res, next) => {
       }
       res.redirect('/restaurant/'+req.params.id);
     }
+  }
+  catch(err){
+    next(err)
+  }
+});
+
+router.get('/:id/menu/add', async (req, res, next) => {
+  try{
+    //console.log("get menu add");
+    const [menus] = await connection.execute('SELECT name, price FROM menus WHERE restaurant_id = ?', [req.params.id]);
+    res.render('addMenu', { title: 'Add New Menu', 
+                            action: req.params.id, 
+                            name: '', 
+                            price: '', 
+                            id: req.params.id});
+  }
+  catch (err){
+    next(err);
+  }
+});
+
+router.post('/:id/menu/add', async (req, res, next) => {
+  try{
+    //console.log("post menu");
+    //console.log(req.params.id, req.body.name, req.body.price);
+    const [rows] = await connection.query('INSERT INTO menus (restaurant_id, name, price) VALUES (?,?,?)', 
+                      [req.params.id, req.body.name, req.body.price]);
+
+    res.redirect('/index');
+  }
+  catch(err){
+    next(err)
+  }
+});
+
+router.get('/:id/menu/:menuid/delete', async (req, res, next) => {
+  try{
+    const [rows] = await connection.query('DELETE FROM menus WHERE (id, restaurant_id) = (?, ?)', [req.params.menuid, req.params.id]);
+    res.redirect('/');
+  }
+  catch(err){
+    next(err)
+  }
+});
+
+
+router.get('/:id/menu/:menuid/edit', async (req, res, next) => {
+  try{
+    console.log("get edit");
+    const [menus] = await connection.execute('SELECT name, price FROM menus WHERE (id, restaurant_id) = (?, ?)', [req.params.menuid, req.params.id]);
+    console.log(menus[0]);
+    res.render("menuDetail", {
+          title: "Menu details",
+          action: (req.params.id, req.params.menuid),
+          name: menus[0].NAME,
+          price: menus[0].PRICE,
+          id: req.params.id,
+          menuid: req.params.menuid
+      });
   }
   catch(err){
     next(err)

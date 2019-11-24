@@ -9,24 +9,21 @@ block content
   a(href="/restaurant/#{id}/delete") delete
   h1= name
   p @ #{address}
+
+  a(href="/restaurant/#{id}/menu/add") + Add menu
+  ul
+    for menu in menus
+      li
+        a(href="/restaurant/#{id}/menu/#{menu.ID}/edit") menuName #{menu.NAME} 
+        p price #{menu.PRICE}
+        &emsp;
+    else
+      p sorry, no menu!
+
+
+
   for tag in tags
     a(href="/tag/#{tag.id}" style="background-color: lightgreen;") # #{tag.name}
     &emsp;
 
-  //- p Menu
-  //- ul
-  //-   for menu in menus
-  //-     li
-  //-       p #{menu.NAME}
-  //-       p #{menu.PRICE}
-  //-   else
-  //-     li sorry, no menu!
 
-  //- p Reviews
-  //- ul
-  //-   for review in reviews
-  //-     li
-  //-       p #{review.USER_ID}
-  //-       p #{review.COMMENT}
-  //-   else
-  //-     li sorry, no review!
