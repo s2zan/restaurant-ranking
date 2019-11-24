@@ -59,7 +59,7 @@ router.get('/:id', async (req, res, next) => {
                                           + "ON tags.id = m.tag_id "
                                           + "WHERE m.restaurant_id = ?", [req.params.id])
     const [score] = await connection.query("SELECT avg(score) FROM reviews WHERE restaurant_id = ?", [req.params.id])
-    const [reviews] = await connection.query("SELECT `name`, `comment`, score, created_at FROM reviews join users on user_id = users.id WHERE restaurant_id = ? ORDER BY created_at DESC", [req.params.id])
+    const [reviews] = await connection.query("SELECT reviews.id, user_id, `name`, `comment`, score, created_at FROM reviews join users on user_id = users.id WHERE restaurant_id = ? ORDER BY created_at DESC", [req.params.id])
     res.render("restaurantDetail", {
       title: "Restaurant Detail",
       id: restaurant[0].ID,
@@ -67,7 +67,8 @@ router.get('/:id', async (req, res, next) => {
       address: restaurant[0].ADDRESS,
       tags: tags,
       score: score[0]['avg(score)'],
-      reviews: reviews
+      reviews: reviews,
+      user: req.session.user
     });
   }
   catch(err){
