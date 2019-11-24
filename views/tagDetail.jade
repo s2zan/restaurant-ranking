@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h3= title
+  a(href="/") home
+  br
+  a(href="/tag/#{id}/edit") edit
+  br
+  a(href="/tag/#{id}/delete") delete
+  h1= name
+  p #{desc}
+  ol
+    for restaurant in restaurants
+      li 
+        a(href="/restaurant/#{restaurant.ID}") #{restaurant.NAME}
+

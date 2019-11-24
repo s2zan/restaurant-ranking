@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 #{title}
+  form(method='POST' action='/tag/#{action}')
+        div.form-group
+            label(for='name') name
+            input.form-control(type='text' id='name' placeholder='name' name='name' value='#{name}')
+        div.form-group
+            label(for='desc') description
+            input.form-control(type='text' id='desc' placeholder='description' name='desc' value='#{desc}')
+        button.btn.btn-primary(type='submit') submit
+  

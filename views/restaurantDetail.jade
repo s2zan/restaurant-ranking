@@ -9,7 +9,9 @@ block content
   a(href="/restaurant/#{id}/delete") delete
   h1= name
   p @ #{address}
-  p #{tags}
+  for tag in tags
+    a(href="/tag/#{tag.id}" style="background-color: lightgreen;") # #{tag.name}
+    &emsp;
 
   //- p Menu
   //- ul
