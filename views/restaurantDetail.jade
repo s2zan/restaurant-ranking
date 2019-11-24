@@ -2,7 +2,7 @@ extends layout
 
 block content
   h3= title
-  a(href="/index") home
+  a(href="/") home
   br
   a(href="/restaurant/#{id}/edit") edit
   br
@@ -13,6 +13,11 @@ block content
     a(href="/tag/#{tag.id}" style="background-color: lightgreen;") # #{tag.name}
     &emsp;
 
+  h4 REVIEW
+  form(method='POST' action='/review')
+    label(for='review') review
+    textarea.form-control(id='name' placeholder='Please review this restaurant...' name='review' value='#{review}')
+  
   //- p Menu
   //- ul
   //-   for menu in menus
