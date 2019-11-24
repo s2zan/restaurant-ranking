@@ -2,7 +2,8 @@ extends layout
 
 block content
   h1 #{title}
-  p(style="color: red;") #{error}
+  if error
+    div.alert.alert-danger #{error}
   form(method='POST' action='/join')
     div.form-group
         label(for='id') id
@@ -13,5 +14,4 @@ block content
     div.form-group
         label(for='NAME') name
         input.form-control(type='text' id='name' placeholder='NAME' name='name' value='#{name}')
-    button.btn.btn-primary(type='submit') submit
-    a(href="/login"): button(type="button") back
+    button.btn.btn-primary(type='submit') Join

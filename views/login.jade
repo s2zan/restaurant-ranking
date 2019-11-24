@@ -2,7 +2,8 @@ extends layout
 
 block content
   h1 #{title}
-  p(style="color: red;") #{error}
+  if error
+    div.alert.alert-danger #{error}
   form(method='POST' action='/login')
     div.form-group
         label(for='id') ID
@@ -11,4 +12,4 @@ block content
         label(for='pw') PW
         input.form-control(type='password' id='pw' placeholder='PASSWORD' name='pw' value='#{pw}')
     button.btn.btn-primary(type='submit') login
-    a(href="/join"): button(type="button") join
+    a(href="/join"): button.btn.btn-warning(type="button") join
