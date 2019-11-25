@@ -4,10 +4,10 @@ block content
   h3= title
   a(href="/") home
   br
-  a(href="/restaurant/#{id}/menu/#{menuID}/delete") delete
+  a(href="/restaurant/#{id}/menu/#{menuid}/delete") delete
 
   h1 #{title}
-  form(method='POST' action='/restaurant/#{id}/menu/#{menuID}/edit')
+  form(method='POST' action='/restaurant/#{action}')
         div.form-group
             label(for='name') name
             input.form-control(type='text' id='name' placeholder='name' name='name' value='#{name}')

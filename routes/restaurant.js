@@ -43,7 +43,7 @@ router.post('/add', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try{
     const [restaurant] = await connection.execute('SELECT * FROM restaurants WHERE id = ?', [req.params.id]);
-    const [menus] = await connection.query("SELECT name, price FROM menus WHERE menus.restaurant_id = ?", [req.params.id]);
+    const [menus] = await connection.query("SELECT * FROM menus WHERE menus.restaurant_id = ?", [req.params.id]);
     const [tags] = await connection.query("SELECT tags.id, tags.name FROM tags INNER JOIN mapping_tag_restaurant AS m "
                                           + "ON tags.id = m.tag_id "
                                           + "WHERE m.restaurant_id = ?", [req.params.id])
@@ -55,7 +55,6 @@ router.get('/:id', async (req, res, next) => {
       tags: tags,
       menus: menus,
     });
-    console.log(menus);
   }
   catch(err){
     next(err)
@@ -146,16 +145,18 @@ router.post('/:id/menu/add', async (req, res, next) => {
                       [req.params.id, req.body.name, req.body.price]);
 
     res.redirect('/index');
-  }
+  } 
   catch(err){
     next(err)
   }
 });
 
 router.get('/:id/menu/:menuid/delete', async (req, res, next) => {
+  console.log("delete");
+  console.log(req.params.id, req.params.menuid);
   try{
-    const [rows] = await connection.query('DELETE FROM menus WHERE (id, restaurant_id) = (?, ?)', [req.params.menuid, req.params.id]);
-    res.redirect('/');
+    const [rows] = await connection.query('DELETE FROM menus WHERE id = ? AND restaurant_id = ?', [req.params.menuid, req.params.id]);
+    res.redirect('/restaurant/' + req.params.id);
   }
   catch(err){
     next(err)
@@ -165,17 +166,40 @@ router.get('/:id/menu/:menuid/delete', async (req, res, next) => {
 
 router.get('/:id/menu/:menuid/edit', async (req, res, next) => {
   try{
-    console.log("get edit");
-    const [menus] = await connection.execute('SELECT name, price FROM menus WHERE (id, restaurant_id) = (?, ?)', [req.params.menuid, req.params.id]);
-    console.log(menus[0]);
+    const [menus] = await connection.execute('SELECT * FROM menus WHERE id = ? AND restaurant_id = ?', [req.params.menuid, req.params.id]);
     res.render("menuDetail", {
-          title: "Menu details",
-          action: (req.params.id, req.params.menuid),
+          title: "Menu edit",
+          action: req.params.id + '/menu/' +  req.params.menuid + '/edit',
           name: menus[0].NAME,
           price: menus[0].PRICE,
-          id: req.params.id,
-          menuid: req.params.menuid
+          id: menus[0].RESTAUARNT_ID,
+          menuid: menus[0].ID
       });
+  }
+  catch(err){
+    next(err)
+  }
+});
+
+router.post('/:id/menu/:menuid/edit', async (req, res, next) => {
+  try{
+    if (req.body.name == null || req.body.name.length == 0) {
+      // const [menus] = await connection.query('SELECT * FROM menus WHERE id = ? AND restaurant_id = ?', [req.params.menuid, req.params.id])
+      // res.render('restaurantDetail', { title: 'Restaurant Detail', 
+      //                                   action: req.params.id + req.params.menuid, 
+      //                                   name: '', 
+      //                                   address: req.body.address,
+      //                                   price: req.body.price, 
+      //                                   menus: menus,
+      //                                   tags: tags, 
+      //                                   error: "Please Insert Name and Price!"
+      //                                 });
+    }
+    else {
+      await connection.query('UPDATE menus SET name = ?, price = ? WHERE id = ? AND restaurant_id = ?', 
+                        [req.body.name, req.body.price, req.params.menuid, req.params.id]);
+      res.redirect('/restaurant/'+req.params.id);
+    }
   }
   catch(err){
     next(err)

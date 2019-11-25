@@ -14,8 +14,8 @@ block content
   ul
     for menu in menus
       li
-        a(href="/restaurant/#{id}/menu/#{menu.ID}/edit") menuName #{menu.NAME} 
-        p price #{menu.PRICE}
+        a(href="/restaurant/#{id}/menu/#{menu.ID}/edit") #{menu.NAME} 
+        p price : #{menu.PRICE} won
         &emsp;
     else
       p sorry, no menu!
