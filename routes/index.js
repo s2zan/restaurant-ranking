@@ -7,7 +7,12 @@ router.get('/', async (req, res, next) => {
   if(req.session.user == null){
     res.redirect('/login');
   }
-  const [restaurants] = await connection.execute('SELECT * , (SELECT AVG(score) FROM reviews WHERE restaurant_id = restaurants.id) as score FROM restaurants ORDER BY score DESC');
+  const [restaurants] = await connection.execute('SELECT res.*, AVG(score) as score '
+                                              + 'FROM restaurants as res '
+                                              + 'LEFT OUTER JOIN reviews as rev '
+                                              + 'ON res.id = rev.restaurant_id '
+                                              + 'GROUP BY res.id '
+                                              + 'ORDER BY score DESC');
   const [tags] = await connection.execute('SELECT * FROM tags');
 
   res.render('index', {
