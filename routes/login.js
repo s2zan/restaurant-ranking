@@ -4,12 +4,10 @@ var connection = require("../lib/db");
 
 
 router.get('/', function (req, res, next) {
-    console.log(req.session)
     res.render('login', { title: 'EWHA-eats', id: '', pw: '' });
 });
 
 router.post("/", async (req, res, next) => {
-    console.log(req.session)
     try{
         if (req.body.id == null || req.body.id.length == 0 || req.body.pw == null || req.body.pw.length == 0){
             res.render('login', { title: 'EWHA-eats', id: '', pw: '', error: 'Please enter ID and Password' });
