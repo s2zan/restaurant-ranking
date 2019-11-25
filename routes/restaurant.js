@@ -125,24 +125,30 @@ router.post('/:id/edit', async (req, res, next) => {
   try{
     if (req.body.name == null || req.body.name.length == 0) {
       const [tags] = await connection.query("SELECT tags.id, tags.name, m.restaurant_id FROM tags LEFT OUTER JOIN mapping_tag_restaurant AS m "
-      + "ON tags.id = m.tag_id "
-      + "AND m.restaurant_id = ?", [req.params.id])
+                                          + "ON tags.id = m.tag_id "
+                                          + "AND m.restaurant_id = ?", [req.params.id])
       res.render('addRestaurant', { title: 'Edit Restaurant', action: req.params.id + "/edit", name: '', address: req.body.address, tags: tags, error: "Please Insert Restaurant's Name!"});
     }
     else {
-      await connection.query('UPDATE restaurants SET name = ?, address = ? WHERE id = ?', 
-                        [req.body.name, req.body.address, req.params.id]);
-      await connection.query('DELETE FROM mapping_tag_restaurant WHERE restaurant_id = ?', [req.params.id]);
-      
-      if(req.body.tags != null){
-        let tags = null
-        if(Array.isArray(req.body.tags))
+      connection.query('START TRANSACTION')
+        .then(async() => {
+          await connection.query('UPDATE restaurants SET name = ?, address = ? WHERE id = ?', 
+                                  [req.body.name, req.body.address, req.params.id]);
+          await connection.query('DELETE FROM mapping_tag_restaurant WHERE restaurant_id = ?', [req.params.id]);
+
+          if(req.body.tags != null){
+          let tags = null
+          if(Array.isArray(req.body.tags))
           tags = req.body.tags.map(x=>[req.params.id, x])
-        else
+          else
           tags = [[req.params.id, req.body.tags]]
-        await connection.query('INSERT INTO mapping_tag_restaurant (restaurant_id, tag_id) VALUES ?', [tags]);
-      }
-      res.redirect('/restaurant/'+req.params.id);
+          await connection.query('INSERT INTO mapping_tag_restaurant (restaurant_id, tag_id) VALUES ?', [tags]);
+          }
+        })
+        .then(() =>{
+          connection.query('COMMIT');
+          res.redirect('/restaurant/'+req.params.id);
+        })
     }
   }
   catch(err){
