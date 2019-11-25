@@ -3,6 +3,7 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+<<<<<<< HEAD
   a(href="/restaurant/add") + Add New Restaurant
   ol
     for restaurant in restaurants
@@ -18,4 +19,32 @@ block content
         a(href="/tag/#{tag.ID}") #{tag.NAME}
     else
       li sorry, no tag!
+=======
+  div.row
+    div.col-sm-8
+      a(href="/restaurant/add"): button.btn.btn-success(type="button") + Add New Restaurant
+      ol.list-group
+        for restaurant in restaurants
+          li.list-group-item
+            a(href="/restaurant/#{restaurant.ID}") #{restaurant.NAME}
+            span(style="float: right;")
+              if restaurant.score != null
+                - for (var i = 1; i <= restaurant.score; ++i) {
+                  span ⭐️
+                - }
+                &emsp;
+                span #{Math.round(restaurant.score * 100)/100}
+        else
+          li sorry, no restaurant!
+    div.col-sm-4
+      a(href="/tag/add"): button.btn.btn-success(type="button") + Add New Tag
+      ul.list-group
+        for tag in tags
+          li.list-group-item
+            a(href="/tag/#{tag.ID}") #{tag.NAME}
+        else
+          li sorry, no restaurant!
+    
+  button.btn.btn-warning(type="button" onclick="location.href = '/logout'" style="margin-top: 50px") logout
+>>>>>>> 8182546eb1500df0ee58a6b2023a0ede052daa9a
 

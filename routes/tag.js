@@ -3,10 +3,16 @@ var router = express.Router();
 var connection = require("../lib/db");
 
 router.get('/add', function (req, res, next) {
+  if(req.session.user == null){
+    res.redirect('/login');
+  }
   res.render('addTag', { title: 'Add New Tag', action: 'add', name: '', desc: '' });
 });
 
 router.post('/add', async (req, res, next) => {
+  if(req.session.user == null){
+    res.redirect('/login');
+  }
     try{
       const [rows] = await connection.query('INSERT INTO tags (name, `desc`) VALUES (?,?)', 
                         [req.body.name, req.body.desc]);
@@ -19,11 +25,15 @@ router.post('/add', async (req, res, next) => {
 
 
 router.get('/:id', async (req, res, next) => {
+  if(req.session.user == null){
+    res.redirect('/login');
+  }
   try{
     const [tag] = await connection.execute('SELECT * FROM tags WHERE id = ?', [req.params.id]);
-    const [restaurants] = await connection.query("SELECT * FROM restaurants AS r INNER JOIN mapping_tag_restaurant AS m "
-                                          + "ON r.id = m.restaurant_id "
-                                          + "WHERE m.tag_id = ?", [req.params.id])
+    const [restaurants] = await connection.query("SELECT * , (SELECT AVG(score) FROM reviews WHERE restaurant_id = restaurants.id) as score "
+                                                +"FROM restaurants "
+                                                +"WHERE id IN (SELECT restaurant_id FROM mapping_tag_restaurant WHERE tag_id = ?) "
+                                                +"ORDER BY score DESC", [req.params.id])
     console.log(restaurants)
     res.render("tagDetail", {
       title: "Tag Detail",
@@ -39,6 +49,9 @@ router.get('/:id', async (req, res, next) => {
 });
 
 router.get('/:id/delete', async (req, res, next) => {
+  if(req.session.user == null){
+    res.redirect('/login');
+  }
     try{
       const [rows] = await connection.query('DELETE FROM tags WHERE id = ?', [req.params.id]);
       res.redirect('/');
@@ -49,6 +62,9 @@ router.get('/:id/delete', async (req, res, next) => {
   });
   
 router.get('/:id/edit', async (req, res, next) => {
+  if(req.session.user == null){
+    res.redirect('/login');
+  }
     try{
       const [tag] = await connection.execute('SELECT * FROM tags WHERE id = ?', [req.params.id]);
       res.render("addTag", {
@@ -64,6 +80,9 @@ router.get('/:id/edit', async (req, res, next) => {
   });
 
 router.post('/:id/edit', async (req, res, next) => {
+  if(req.session.user == null){
+    res.redirect('/login');
+  }
     try{
       const [rows] = await connection.query('UPDATE tags SET name = ?, `desc` = ? WHERE id = ?', 
                         [req.body.name, req.body.desc, req.params.id]);

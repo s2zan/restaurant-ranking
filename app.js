@@ -4,13 +4,16 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var mainRouter = require('./routes/main');
+var session = require('express-session')
+var FileStore = require('session-file-store')(session)
+
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var restaurantRouter = require('./routes/restaurant');
 var loginRouter = require('./routes/login');
+var logoutRouter = require('./routes/logout');
 var joinRouter = require('./routes/join');
 var tagRouter = require('./routes/tag');
+var reviewRouter = require('./routes/review');
 
 var app = express();
 
@@ -24,13 +27,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', mainRouter);
+app.use(session({
+  secret: 'asadlfkj!@#!@#dfgasdg',
+  resave: false,
+  saveUninitialized: true,
+  store:new FileStore()
+}))
+
+app.use('/', indexRouter);
 app.use('/login', loginRouter);
-app.use('/users', usersRouter);
-app.use('/restaurant', restaurantRouter);
-app.use('/index', indexRouter);
+app.use('/logout', logoutRouter);
 app.use('/join', joinRouter);
+app.use('/restaurant', restaurantRouter);
 app.use('/tag', tagRouter);
+app.use('/review', reviewRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -2,15 +2,27 @@ extends layout
 
 block content
   h3= title
-  a(href="/") home
-  br
-  a(href="/tag/#{id}/edit") edit
-  br
-  a(href="/tag/#{id}/delete") delete
-  h1= name
-  p #{desc}
-  ol
+  div.btn-group(role="group" style="margin-bottom: 20px;")
+    button.btn.btn-outline-primary(type="button" onclick="location.href = '/'") home
+    button.btn.btn-outline-success(type="button" onclick="location.href = '/tag/"+id+"/edit'") edit
+    button.btn.btn-outline-danger(type="button" onclick="location.href = '/tag/"+id+"/delete'") delete
+
+  div.card
+    div.card-header 
+      h1= name
+    div.card-body
+      p #{desc}
+  h3(style="margin-top: 30px") Restaurant Ranking
+  ol.list-group
     for restaurant in restaurants
-      li 
+      li.list-group-item
         a(href="/restaurant/#{restaurant.ID}") #{restaurant.NAME}
+        span(style="float: right;")
+              if restaurant.score != null
+                - for (var i = 1; i <= restaurant.score; ++i) {
+                  span ⭐️
+                - }
+                &emsp;
+                span #{Math.round(restaurant.score * 100)/100}
+      
 

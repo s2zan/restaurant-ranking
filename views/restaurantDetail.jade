@@ -2,23 +2,43 @@ extends layout
 
 block content
   h3= title
-  a(href="/index") home
-  br
-  a(href="/restaurant/#{id}/edit") edit
-  br
-  a(href="/restaurant/#{id}/delete") delete
-  h1= name
-  p @ #{address}
+  div.btn-group(role="group" style="margin-bottom: 20px;")
+    button.btn.btn-outline-primary(type="button" onclick="location.href = '/'") home
+    button.btn.btn-outline-success(type="button" onclick="location.href = '/restaurant/"+id+"/edit'") edit
+    button.btn.btn-outline-danger(type="button" onclick="location.href = '/restaurant/"+id+"/delete'") delete
 
-  a(href="/restaurant/#{id}/menu/add") + Add menu
-  ul
-    for menu in menus
-      li
-        a(href="/restaurant/#{id}/menu/#{menu.ID}/edit") #{menu.NAME} 
-        p price : #{menu.PRICE} won
+  div.card
+    div.card-header 
+      h1 #{name}
+    div.card-body
+      p @ #{address}
+      if score != null
+        - for (var i = 1; i <= score; ++i) {
+          span ⭐️
+        - }
         &emsp;
-    else
-      p sorry, no menu!
+        span #{Math.round(score * 100)/100}
+      else
+        p(style="color: lightgray;") There are no reviews yet.
+      br
+      for tag in tags
+        a(href="/tag/#{tag.id}")
+          span.badge.badge-success # #{tag.name}
+        &emsp; 
+  br
+  //- a(href="/restaurant/#{id}/delete") delete
+  //- h1= name
+  //- p @ #{address}
+
+  //- a(href="/restaurant/#{id}/menu/add") + Add menu
+  //- ul
+  //-   for menu in menus
+  //-     li
+  //-       a(href="/restaurant/#{id}/menu/#{menu.ID}/edit") #{menu.NAME} 
+  //-       p price : #{menu.PRICE} won
+  //-       &emsp;
+  //-   else
+  //-     p sorry, no menu!
 
 
 
@@ -26,4 +46,52 @@ block content
     a(href="/tag/#{tag.id}" style="background-color: lightgreen;") # #{tag.name}
     &emsp;
 
+  div.card
+    div.card-body
+      h4 REVIEWS
+      form(method='POST' action='/review/#{id}')
+        div.form-group
+          textarea.form-control(id='comment' placeholder='Please review this restaurant...' name='comment' value='#{comment}')
+          br
+          button.btn.btn-primary(type='submit', style="float:right;") submit
+
+          div(style="float:right;")
+            span score: 
+            div.form-check.form-check-inline
+              input.for-check-input(type="radio", id="1", value=1, name="score")
+              label.form-check-label(for="1") 1
+            div.form-check.form-check-inline
+              input.for-check-input(type="radio", id="2", value=2, name="score")
+              label.form-check-label(for="2")  2
+            div.form-check.form-check-inline
+              input.for-check-input(type="radio", id="3", value=3, name="score")
+              label.form-check-label(for="3")  3
+            div.form-check.form-check-inline
+              input.for-check-input(type="radio", id="4", value=4, name="score")
+              label.form-check-label(for="4")  4
+            div.form-check.form-check-inline
+              input.for-check-input(type="radio", id="5", value=5, name="score")
+              label.form-check-label(for="5")  5
+      
+      table.table(style="margin-top: 50px;")
+        for review in reviews
+          tr 
+            th(scope="row") #{review.name}
+            td #{review.comment}
+            td
+              - for (var i = 1; i <= review.score; ++i) {
+                span ⭐️
+              - }
+            td #{review.created_at.getFullYear()}. #{review.created_at.getMonth()+1}. #{review.created_at.getDate()}
+            if user == review.user_id
+              td
+                a(href="/review/#{id}/#{review.id}/delete"): button.btn.btn-outline-danger(type="button") DEL
+  //- p Menu
+  //- ul
+  //-   for menu in menus
+  //-     li
+  //-       p #{menu.NAME}
+  //-       p #{menu.PRICE}
+  //-   else
+  //-     li sorry, no menu!
 
