@@ -34,7 +34,6 @@ router.get('/:id', async (req, res, next) => {
                                                 +"FROM restaurants "
                                                 +"WHERE id IN (SELECT restaurant_id FROM mapping_tag_restaurant WHERE tag_id = ?) "
                                                 +"ORDER BY score DESC", [req.params.id])
-    console.log(restaurants)
     res.render("tagDetail", {
       title: "Tag Detail",
       id: tag[0].ID,

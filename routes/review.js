@@ -3,7 +3,6 @@ var router = express.Router();
 var connection = require("../lib/db");
 
 router.post('/:restaurant', async (req, res, next) => {
-    console.log(req.body)
     if(req.session.user == null){
         req.session.url = '/restaurant/'+req.params.restaurant
         res.redirect('/login');
@@ -19,7 +18,6 @@ router.post('/:restaurant', async (req, res, next) => {
 });
 
 router.get('/:restaurant/:id/delete', async (req, res, next) => {
-    console.log(req.body)
     if(req.session.user == null){
         req.session.url = '/restaurant/'+req.params.restaurant
         res.redirect('/login');

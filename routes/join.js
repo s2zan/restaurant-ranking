@@ -7,7 +7,6 @@ router.get('/', function (req, res, next){
 });
 
 router.post('/', async(req, res, next) => {
-    console.log(req.body)
     try{
         if (req.body.id == null || req.body.id.length == 0 || req.body.pw == null || req.body.pw.length == 0 || req.body.name == null || req.body.name.length == 0){
             res.render('join', { title: 'Join', id: req.body.id, pw: req.body.pw, name: req.body.name, error: 'Please enter ID, Password and Name' });

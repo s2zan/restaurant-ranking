@@ -21,32 +21,29 @@ block content
       else
         p(style="color: lightgray;") There are no reviews yet.
       br
-      for tag in tags
-        a(href="/tag/#{tag.id}")
-          span.badge.badge-success # #{tag.name}
-        &emsp; 
-  br
-  //- a(href="/restaurant/#{id}/delete") delete
-  //- h1= name
-  //- p @ #{address}
-
-  //- a(href="/restaurant/#{id}/menu/add") + Add menu
-  //- ul
-  //-   for menu in menus
-  //-     li
-  //-       a(href="/restaurant/#{id}/menu/#{menu.ID}/edit") #{menu.NAME} 
-  //-       p price : #{menu.PRICE} won
-  //-       &emsp;
-  //-   else
-  //-     p sorry, no menu!
-
-
-
-  for tag in tags
-    a(href="/tag/#{tag.id}" style="background-color: lightgreen;") # #{tag.name}
-    &emsp;
-
-  div.card
+      div
+        for tag in tags
+          a(href="/tag/#{tag.id}")
+            span.badge.badge-success # #{tag.name}
+          &emsp; 
+      h3(style="margin-top: 50px;") MENU
+      a(href="/restaurant/#{id}/menu/add" style="float:right;") + Add menu
+      table.table
+        thead
+          tr
+            th(scope="col") name
+            th(scope="col") price
+            th -
+            th -
+        for menu in menus
+          tr 
+            th(scope="row") #{menu.NAME}
+            td #{menu.PRICE}
+            td 
+              a(href="/restaurant/#{id}/menu/#{menu.ID}/edit") edit
+            td 
+              a(href="/restaurant/#{id}/menu/#{menu.ID}/delete") delete
+  div.card(style="margin-top: 20px;")
     div.card-body
       h4 REVIEWS
       form(method='POST' action='/review/#{id}')

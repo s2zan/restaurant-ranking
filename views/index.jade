@@ -3,23 +3,6 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-<<<<<<< HEAD
-  a(href="/restaurant/add") + Add New Restaurant
-  ol
-    for restaurant in restaurants
-      li 
-        a(href="/restaurant/#{restaurant.ID}") #{restaurant.NAME}
-    else
-      li sorry, no restaurant!
-  
-  a(href="/tag/add") + Add New Tag
-  ul
-    for tag in tags
-      li 
-        a(href="/tag/#{tag.ID}") #{tag.NAME}
-    else
-      li sorry, no tag!
-=======
   div.row
     div.col-sm-8
       a(href="/restaurant/add"): button.btn.btn-success(type="button") + Add New Restaurant
@@ -46,5 +29,4 @@ block content
           li sorry, no restaurant!
     
   button.btn.btn-warning(type="button" onclick="location.href = '/logout'" style="margin-top: 50px") logout
->>>>>>> 8182546eb1500df0ee58a6b2023a0ede052daa9a
 
