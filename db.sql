@@ -100,6 +100,19 @@ VALUES
 ('Noranjip', 'Ewha32'),
 ('Ewhain Waffle', 'Ewha59');
 
+# 9
+INSERT INTO TAGS (`NAME`, `DESC`)
+VALUES
+('Seafood', 'shrimp, crab, lobster'),
+('Hamburger', 'Hamburger place'),
+('Dessert', 'Dessert place'),
+('Waffle', ' '),
+('Fruits', 'desserts with fruits'),
+('Icecream', 'Sweet icecream'),
+('Warm and Cozy', 'cozy atmosphere'),
+('Close to main gate', ' '),
+('Kind', 'Kind staffs');
+
 # 17
 INSERT INTO MAPPING_TAG_RESTAURANT (RESTAURANT_ID, TAG_ID)
 VALUES
@@ -120,19 +133,6 @@ VALUES
 (6, 1),
 (6, 8),
 (7, 4);
-
-# 9
-INSERT INTO TAGS (`NAME`, `DESC`)
-VALUES
-('Seafood', 'shrimp, crab, lobster'),
-('Hamburger', 'Hamburger place'),
-('Dessert', 'Dessert place'),
-('Waffle', ' '),
-('Fruits', 'desserts with fruits'),
-('Icecream', 'Sweet icecream'),
-('Warm and Cozy', 'cozy atmosphere'),
-('Close to main gate', ' '),
-('Kind', 'Kind staffs');
 
 # 33
 INSERT INTO MENUS(RESTAURANT_ID, `NAME`, PRICE)
