@@ -30,7 +30,6 @@ router.post('/add', async (req, res, next) => {
     else {
       const [rows] = await connection.query('INSERT INTO restaurants (name, address) VALUES (?,?)', 
                         [req.body.name, req.body.address]);
-
       if(req.body.tags != null){
         let tags = null
         if(Array.isArray(req.body.tags))
@@ -40,7 +39,7 @@ router.post('/add', async (req, res, next) => {
 
         await connection.query('INSERT INTO mapping_tag_restaurant (restaurant_id, tag_id) VALUES ?', [tags]);
       }
-      res.redirect('/index');
+      res.redirect('/restaurant/'+rows.insertId);
     }
   }
   catch(err){
